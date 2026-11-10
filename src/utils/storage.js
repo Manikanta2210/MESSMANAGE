@@ -1,118 +1,97 @@
-import { getDateStringOffset } from './dateUtils';
+// LocalStorage persistence for Mess Management System
+import {
+  INITIAL_MENU,
+  INITIAL_CUSTOMERS,
+  INITIAL_ORDERS,
+  INITIAL_TRANSACTIONS,
+} from '../data/initialData';
 
-const STORAGE_KEY = 'taskflow_tasks_v1';
-const INITIALIZED_KEY = 'taskflow_initialized_v1';
+const KEYS = {
+  MENU: 'campus_mess_menu_v1',
+  CUSTOMERS: 'campus_mess_customers_v1',
+  ORDERS: 'campus_mess_orders_v1',
+  TRANSACTIONS: 'campus_mess_transactions_v1',
+  CURRENT_ROLE: 'campus_mess_role_v1',
+  CURRENT_CUST_ID: 'campus_mess_current_cust_v1',
+};
 
-export function getInitialSampleTasks() {
-  return [
-    {
-      id: 'task-1',
-      title: 'Finalize quarterly product roadmap',
-      description: 'Review OKRs with engineering leadership and draft executive summary deck for stakeholders.',
-      priority: 'High',
-      category: 'Work',
-      dueDate: getDateStringOffset(1), // Tomorrow
-      status: 'pending',
-      createdAt: new Date(Date.now() - 3600000 * 24 * 2).toISOString(),
-    },
-    {
-      id: 'task-2',
-      title: 'Submit Distributed Systems lab assignment',
-      description: 'Implement Raft consensus algorithm leader election test cases and submit PDF report.',
-      priority: 'High',
-      category: 'College',
-      dueDate: getDateStringOffset(0), // Due Today
-      status: 'pending',
-      createdAt: new Date(Date.now() - 3600000 * 24 * 3).toISOString(),
-    },
-    {
-      id: 'task-3',
-      title: 'Weekly 5k endurance run & stretching',
-      description: 'Maintain cardio routine at city park track, followed by 15-minute foam roll recovery.',
-      priority: 'Medium',
-      category: 'Personal',
-      dueDate: getDateStringOffset(2), // In 2 days
-      status: 'pending',
-      createdAt: new Date(Date.now() - 3600000 * 24 * 1).toISOString(),
-    },
-    {
-      id: 'task-4',
-      title: 'Prepare slides for Machine Learning seminar',
-      description: 'Cover transformer attention mechanisms, multi-head attention visualizations, and benchmark figures.',
-      priority: 'Medium',
-      category: 'College',
-      dueDate: getDateStringOffset(4), // In 4 days
-      status: 'pending',
-      createdAt: new Date(Date.now() - 3600000 * 18).toISOString(),
-    },
-    {
-      id: 'task-5',
-      title: 'Conduct frontend code review for v2.4 release',
-      description: 'Audit Tailwind class consistency, responsive layouts, and accessibility tags in PR #142.',
-      priority: 'Low',
-      category: 'Work',
-      dueDate: getDateStringOffset(5), // In 5 days
-      status: 'completed',
-      createdAt: new Date(Date.now() - 3600000 * 24 * 4).toISOString(),
-    },
-    {
-      id: 'task-6',
-      title: 'Renew annual vehicle insurance policy',
-      description: 'Compare comprehensive coverage quotes from top providers and verify zero-depreciation add-on.',
-      priority: 'High',
-      category: 'Personal',
-      dueDate: getDateStringOffset(-1), // Overdue by 1 day
-      status: 'pending',
-      createdAt: new Date(Date.now() - 3600000 * 24 * 5).toISOString(),
-    },
-    {
-      id: 'task-7',
-      title: 'Schedule dentist checkup & dental cleaning',
-      description: 'Book morning appointment slot with Dr. Harrison for routine six-month checkup.',
-      priority: 'Low',
-      category: 'Personal',
-      dueDate: getDateStringOffset(-3), // Past
-      status: 'completed',
-      createdAt: new Date(Date.now() - 3600000 * 24 * 6).toISOString(),
-    },
-  ];
-}
-
-export function loadTasksFromStorage() {
+export function loadMenu() {
   try {
-    const isInitialized = localStorage.getItem(INITIALIZED_KEY);
-    const savedData = localStorage.getItem(STORAGE_KEY);
-
-    if (!isInitialized || !savedData) {
-      // First visit: initialize with sample tasks
-      const sampleTasks = getInitialSampleTasks();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(sampleTasks));
-      localStorage.setItem(INITIALIZED_KEY, 'true');
-      return sampleTasks;
-    }
-
-    const parsed = JSON.parse(savedData);
-    if (Array.isArray(parsed)) {
-      return parsed;
-    }
-    return [];
-  } catch (err) {
-    console.error('Failed to load tasks from localStorage', err);
-    return getInitialSampleTasks();
+    const raw = localStorage.getItem(KEYS.MENU);
+    return raw ? JSON.parse(raw) : INITIAL_MENU;
+  } catch (e) {
+    console.error('Failed to load menu from storage', e);
+    return INITIAL_MENU;
   }
 }
 
-export function saveTasksToStorage(tasks) {
+export function saveMenu(menu) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
-  } catch (err) {
-    console.error('Failed to save tasks to localStorage', err);
+    localStorage.setItem(KEYS.MENU, JSON.stringify(menu));
+  } catch (e) {
+    console.error('Failed to save menu to storage', e);
   }
 }
 
-export function resetToSampleTasks() {
-  const samples = getInitialSampleTasks();
-  saveTasksToStorage(samples);
-  localStorage.setItem(INITIALIZED_KEY, 'true');
-  return samples;
+export function loadCustomers() {
+  try {
+    const raw = localStorage.getItem(KEYS.CUSTOMERS);
+    return raw ? JSON.parse(raw) : INITIAL_CUSTOMERS;
+  } catch (e) {
+    console.error('Failed to load customers from storage', e);
+    return INITIAL_CUSTOMERS;
+  }
+}
+
+export function saveCustomers(customers) {
+  try {
+    localStorage.setItem(KEYS.CUSTOMERS, JSON.stringify(customers));
+  } catch (e) {
+    console.error('Failed to save customers to storage', e);
+  }
+}
+
+export function loadOrders() {
+  try {
+    const raw = localStorage.getItem(KEYS.ORDERS);
+    return raw ? JSON.parse(raw) : INITIAL_ORDERS;
+  } catch (e) {
+    console.error('Failed to load orders from storage', e);
+    return INITIAL_ORDERS;
+  }
+}
+
+export function saveOrders(orders) {
+  try {
+    localStorage.setItem(KEYS.ORDERS, JSON.stringify(orders));
+  } catch (e) {
+    console.error('Failed to save orders to storage', e);
+  }
+}
+
+export function loadTransactions() {
+  try {
+    const raw = localStorage.getItem(KEYS.TRANSACTIONS);
+    return raw ? JSON.parse(raw) : INITIAL_TRANSACTIONS;
+  } catch (e) {
+    console.error('Failed to load transactions from storage', e);
+    return INITIAL_TRANSACTIONS;
+  }
+}
+
+export function saveTransactions(transactions) {
+  try {
+    localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify(transactions));
+  } catch (e) {
+    console.error('Failed to save transactions to storage', e);
+  }
+}
+
+export function resetAllData() {
+  localStorage.removeItem(KEYS.MENU);
+  localStorage.removeItem(KEYS.CUSTOMERS);
+  localStorage.removeItem(KEYS.ORDERS);
+  localStorage.removeItem(KEYS.TRANSACTIONS);
+  localStorage.removeItem(KEYS.CURRENT_ROLE);
+  localStorage.removeItem(KEYS.CURRENT_CUST_ID);
 }
